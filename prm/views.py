@@ -108,8 +108,8 @@ def taskApi(request, id=None):
             task_serializer = TaskSerializer(task)
             return JsonResponse(task_serializer.data, safe=False)
         else:
-            tasks = Task.objects.all()
-            task_serializer = TaskSerializer(tasks, many=True)
+            task = Task.objects.all()
+            task_serializer = TaskSerializer(task, many=True)
             return JsonResponse(task_serializer.data, safe=False)
 
     elif request.method == 'POST':
@@ -120,14 +120,29 @@ def taskApi(request, id=None):
             return JsonResponse("Added Successfully", safe=False)
         return JsonResponse("Failed to Add", safe=False)
 
+
     elif request.method == 'PUT':
-        task_data = JSONParser().parse(request)
-        task = Task.objects.get(id=id)
-        task_serializer = TaskSerializer(task, data=task_data)
-        if task_serializer.is_valid():
-            task_serializer.save()
+        if id is not None:
+            task = get_object_or_404(Task, id=id)
+            task_data = JSONParser().parse(request)
+            task_serializer = TaskSerializer(task, data=task_data)
+            if task_serializer.is_valid():
+                task_serializer.save()
+                return JsonResponse("Updated Successfully", safe=False)
+            return JsonResponse("Failed to Update", status=400)
+
+        else:
+            task = Task.objects.all()
+            task_data_list = JSONParser().parse(request)
+            for task_data in task_data_list:
+                task_id = task_data.get('id')
+                task = get_object_or_404(Task, id=task_id)
+                task_serializer = TaskSerializer(task, data=task_data)
+                if task_serializer.is_valid():
+                    task_serializer.save()
+                else:
+                    return JsonResponse("Failed to Update", status=400)
             return JsonResponse("Updated Successfully", safe=False)
-        return JsonResponse("Failed to Update")
 
     elif request.method == 'DELETE':
         task = Task.objects.get(id=id)
