@@ -10,5 +10,6 @@ urlpatterns = [
     re_path(r'^project$', views.projectApi),
     re_path(r'^project/([0-9]+)$', views.projectApi),
     re_path(r'^task$', views.taskApi),
-    re_path(r'^task/([0-9]+)$', views.taskApi)
+    re_path(r'^task/([0-9]+)$', views.taskApi),
+    re_path(r'^username$', views.usernameApi),
 ]

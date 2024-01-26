@@ -7,7 +7,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from rest_framework.response import Response
-from prm.serializers import ProjectSerializer, UserSerializer, TaskSerializer
+from prm.serializers import ProjectSerializer, UserSerializer, TaskSerializer, UsernameSerializer
 from prm.models import Project, User, Task
 
 
@@ -148,3 +148,13 @@ def taskApi(request, id=None):
         task = Task.objects.get(id=id)
         task.delete()
         return JsonResponse("Deleted Successfully", safe=False)
+
+
+@csrf_exempt
+def usernameApi(request):
+    if request.method == 'GET':        
+        # usernames = User.objects.values_list('userName', flat=True)
+        usernames = User.objects.values('userName')
+        username_serializer = UsernameSerializer(usernames, many=True)
+        return JsonResponse(username_serializer.data, safe=False)
+   

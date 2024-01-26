@@ -23,4 +23,4 @@ class Task(models.Model):
     description = models.CharField(max_length=2500, null=True)
     member = models.CharField(max_length=255)
     deadline = models.DateField()
-    status = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, default='Todo')
