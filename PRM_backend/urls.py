@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, re_path
 from prm import views
+from prm import navaViews
+from prm import userview
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,4 +14,10 @@ urlpatterns = [
     re_path(r'^task$', views.taskApi),
     re_path(r'^task/([0-9]+)$', views.taskApi),
     re_path(r'^username$', views.usernameApi),
+    re_path(r'^user$', views.usernameApi),
+    re_path(r'^setting$', navaViews.settingApi),
+    re_path(r'^setting/([0-9]+)$', navaViews.settingApi),
+    re_path(r'^settingPassword$', navaViews.settingasswordApi),
+    re_path(r'^settingPassword/([0-9]+)$', navaViews.settingasswordApi),
+
 ]
