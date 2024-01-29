@@ -15,8 +15,8 @@ from django.contrib.auth import authenticate
 
 def RegisterApi(request):
     if request.method == 'POST':
-        data = JSONParser().parse(request)
-        user_data = data.get('user', {})
+        user_data = JSONParser().parse(request)
+    
         user_data['password'] = make_password(user_data.get('password'))
         user_serializer = UserSerializer(data=user_data)
         if user_serializer.is_valid():
@@ -26,8 +26,7 @@ def RegisterApi(request):
                     "message": "Email already registered",
                 }, status=400)            
             else:
-                user_serializer = UserSerializer(data=user_data)               
-
+                               
                 if user_serializer.is_valid():
                     user_instance = user_serializer.save()
                     token, created = Token.objects.get_or_create(user=user_instance)
@@ -72,8 +71,7 @@ def LoginApi(request):
                 if created==False:
                     token.delete()
                     token = Token.objects.create(user=user)
-                # Reserver = reserver.objects.filter(userId=user.id).first()
-
+                
                 user_info = {
                     "is_superuser": user.is_superuser,
                     "first_name": user.first_name,

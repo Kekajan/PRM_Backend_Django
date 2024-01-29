@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'prm.apps.PrmConfig',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
