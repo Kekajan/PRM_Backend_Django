@@ -9,6 +9,7 @@ from django.http.response import JsonResponse
 from rest_framework.response import Response
 from prm.serializers import ProjectSerializer, UserSerializer, TaskSerializer, UsernameSerializer
 from prm.models import Project, User, Task
+from django.contrib.auth.hashers import make_password
 
 
 @csrf_exempt
@@ -45,6 +46,7 @@ def projectApi(request, id=0):
 def signup(request, id=0):
     if request.method == 'POST':
         user_data = JSONParser().parse(request)
+        user_data['password'] = make_password(user_data['password'])
         user_serializer = UserSerializer(data=user_data)
         if user_serializer.is_valid():
             user_serializer.save()
@@ -158,3 +160,11 @@ def usernameApi(request):
         username_serializer = UsernameSerializer(usernames, many=True)
         return JsonResponse(username_serializer.data, safe=False)
    
+@csrf_exempt
+def taskProjectApi(request, id=None):
+    if request.method == 'GET':
+        if id is not None:
+            task = Task.objects.filter(projectid=id)
+            task_serializer = TaskSerializer(task, many=True)
+            return JsonResponse(task_serializer.data, safe=False)
+        

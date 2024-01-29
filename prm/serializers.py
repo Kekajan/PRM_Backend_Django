@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from prm.models import Project, User, Task
+from prm.models import Project, Task
+from django.contrib.auth.models import User
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -8,10 +9,20 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = '__all__'
+        
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['username', 'password', 'is_superuser', 'first_name', 'last_name', 'email']
+        extra_kwargs = {
+            'password': {
+                'write_only': True,
+            },
+        }
 
 
 class TaskSerializer(serializers.ModelSerializer):
