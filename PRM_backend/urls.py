@@ -12,4 +12,5 @@ urlpatterns = [
     re_path(r'^task/([0-9]+)$', views.taskApi),
     re_path(r'^username$', views.usernameApi),
     re_path(r'^taskproject/([0-9]+)$', views.taskProjectApi),
+    re_path(r'^getprodetails/([0-9]+)$', views.getProjectApi),
 ]

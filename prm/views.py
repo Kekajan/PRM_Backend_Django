@@ -116,11 +116,14 @@ def taskApi(request, id=None):
 
     elif request.method == 'POST':
         task_data = JSONParser().parse(request)
+        task_data['projectid'] = id
         task_serializer = TaskSerializer(data=task_data)
+
         if task_serializer.is_valid():
             task_serializer.save()
             return JsonResponse("Added Successfully", safe=False)
-        return JsonResponse("Failed to Add", safe=False)
+
+        return JsonResponse("Failed to Add", status=400)
 
 
     elif request.method == 'PUT':
@@ -154,12 +157,12 @@ def taskApi(request, id=None):
 
 @csrf_exempt
 def usernameApi(request):
-    if request.method == 'GET':        
-        # usernames = User.objects.values_list('userName', flat=True)
-        usernames = User.objects.values('userName')
+    if request.method == 'GET':
+        usernames = User.objects.values('username')
         username_serializer = UsernameSerializer(usernames, many=True)
         return JsonResponse(username_serializer.data, safe=False)
-   
+
+
 @csrf_exempt
 def taskProjectApi(request, id=None):
     if request.method == 'GET':
@@ -167,4 +170,12 @@ def taskProjectApi(request, id=None):
             task = Task.objects.filter(projectid=id)
             task_serializer = TaskSerializer(task, many=True)
             return JsonResponse(task_serializer.data, safe=False)
-        
+
+
+@csrf_exempt
+def getProjectApi(request, id=None):
+    if request.method == 'GET':
+        if id is not None:
+            project_data = Project.objects.filter(id=id)
+            project_serializer = ProjectSerializer(project_data, many=True)
+            return JsonResponse(project_serializer.data, safe=False)

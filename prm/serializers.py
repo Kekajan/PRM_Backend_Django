@@ -13,7 +13,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = User
 #         fields = '__all__'
-        
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -30,7 +30,8 @@ class TaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = '__all__'
 
+
 class UsernameSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('userName',)
+        fields = ('username',)

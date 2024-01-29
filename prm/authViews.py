@@ -9,14 +9,14 @@ from rest_framework import status
 from .models import User
 from django.contrib.auth import authenticate
 
+
 @api_view(['POST'])
 @csrf_exempt
 @parser_classes([JSONParser])
-
 def RegisterApi(request):
     if request.method == 'POST':
         user_data = JSONParser().parse(request)
-    
+
         user_data['password'] = make_password(user_data.get('password'))
         user_serializer = UserSerializer(data=user_data)
         if user_serializer.is_valid():
@@ -24,13 +24,13 @@ def RegisterApi(request):
             if User.objects.filter(email=email).exists():
                 return JsonResponse({
                     "message": "Email already registered",
-                }, status=400)            
+                }, status=400)
             else:
-                               
+
                 if user_serializer.is_valid():
                     user_instance = user_serializer.save()
                     token, created = Token.objects.get_or_create(user=user_instance)
-                
+
                     user_info = {
                         "is_superuser": user_instance.is_superuser,
                         "first_name": user_instance.first_name,
@@ -39,10 +39,10 @@ def RegisterApi(request):
                         "username": user_instance.username
                     }
                     return JsonResponse({
-                        "user":user_info,
+                        "user": user_info,
                         "token": token.key,
                         "message": True,
-                    },status=200)
+                    }, status=200)
                 user_instance.delete()
                 return JsonResponse({
 
@@ -50,10 +50,10 @@ def RegisterApi(request):
                 }, status=400)
 
         return JsonResponse({
-                "error": user_serializer.errors
-            }, status=400)
-    
-    
+            "error": user_serializer.errors
+        }, status=400)
+
+
 @api_view(['POST'])
 @parser_classes([JSONParser])
 def LoginApi(request):
@@ -68,16 +68,17 @@ def LoginApi(request):
 
             if user:
                 token, created = Token.objects.get_or_create(user=user)
-                if created==False:
+                if created == False:
                     token.delete()
                     token = Token.objects.create(user=user)
-                
+
                 user_info = {
                     "is_superuser": user.is_superuser,
                     "first_name": user.first_name,
                     "last_name": user.last_name,
-                    "email": user.email
-                }                
+                    "email": user.email,
+                    "id": user.id
+                }
                 return JsonResponse({
                     "user": user_info,
                     "token": token.key,
@@ -101,7 +102,8 @@ def LoginApi(request):
                         "is_superuser": user.is_superuser,
                         "first_name": user.first_name,
                         "last_name": user.last_name,
-                        "email": user.email
+                        "email": user.email,
+                        "id": user.id
                     }
 
                     return JsonResponse({
